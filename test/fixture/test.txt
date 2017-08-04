@@ -1,0 +1,8 @@
+Today is friday
+
+{:date(
+    1,
+    2
+):}
+
+Go Home!

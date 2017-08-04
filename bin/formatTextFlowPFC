@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+let {
+    format
+} = require('..');
+let path = require('path');
+let yargs = require('yargs');
+let fs = require('fs');
+
+yargs.usage(`Usage: formatTextFlowPFC [filePath]
+    -w [write to source file]
+    --indent [indent for pfc code]
+    --startDelimiter [start delimiter]
+    --endDelimiter [end delimiter]
+    `).demandOption([]).help('h').alias('h', 'help');
+
+let {
+    argv
+} = yargs;
+
+let file = argv._[0];
+file = path.resolve(process.cwd(), file);
+
+fs.readFile(file, 'utf-8', (err, str) => {
+    if (err) {
+        throw err;
+    }
+
+    let result = format(str, {
+        indent: argv.indent,
+        startDelimiter: argv.startDelimiter,
+        endDelimiter: argv.endDelimiter
+    });
+
+    if (argv.w) {
+        fs.writeFile(file, result, 'utf-8', (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+    } else {
+        console.log(result); // eslint-disable-line
+    }
+});
